@@ -1,0 +1,52 @@
+<div class="container">
+  <div class="container-fluid text-center mt-5 mb-5">
+
+    <% flash.each do |type, msg| %>
+      <div class="alert alert-success">
+        <%= msg %>
+      </div>
+    <% end %>
+
+    <h1 class="display-1">Bienvenue</h1>
+    <p class="text-muted">Ici se trouvent tous les potins du site</p>
+  </div>
+
+  <div class="container text-center mb-5">
+    <h2>Créer un potin</h2>
+    <button class="btn btn-primary">
+      <%=link_to 'Créer', { controller: 'gossips', action: 'new' }, class: "text-light text-decoration-none"%>
+    </button>
+  </div>
+
+  <div class="container">
+    <%Gossip.all.each do |g|%>
+      <div class="card mb-2">
+        <div class="card-body">
+          <div class="container text-end">
+            <h3 class="card-title text-start"><%=g.title%></h3>
+            <h5 class="card-text text-muted text-start"><%=g.user.first_name%> <%=g.user.last_name%></h5>
+            <small class="text-muted">Comms</small>
+            <span class="badge bg-primary rounded-pill"><%=g.comments.size%></span>
+          </div>
+          <div class="container text-end mt-3">
+            <small class="text-muted">Likes</small>
+            <span class="badge bg-warning rounded-pill"><%=g.likes.size%></span>
+          </div>
+          <div class="container d-flex">
+            <div style="margin-right: 1rem;">
+              <%=link_to 'Voir', gossip_path(g.id), class: "btn btn-primary"%>
+            </div>
+            <%if !object_creator?(g)%>
+              <%if liked?(g)%>
+                <%=button_to "Je n'aime plus", like_path(g.id), params: { id: g.id, type: "Gossip" }, method: 'delete', class: 'btn btn-danger'%>
+              <%else%>
+                <%=button_to 'Liker', likes_path, params: { id: g.id, type: "Gossip" }, method: 'post', class: 'btn btn-warning'%>
+              <%end%>
+            <%end%>
+          </div>
+        </div>
+      </div>
+    <%end%>
+</div>
+</div>
+
